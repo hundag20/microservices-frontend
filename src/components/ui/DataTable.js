@@ -1,6 +1,6 @@
 import React from "react";
-import DataTable from "react-data-table-component";
-import StyledDiv from "./styles/fnHomeStyle";
+import _DataTable from "react-data-table-component";
+import StyledDiv from "../styles/DataTableStyle";
 import { useSelector, useDispatch } from "react-redux";
 
 let columns = [
@@ -68,8 +68,8 @@ function downloadCSV(array, sb) {
   if (!csv.match(/^data:text\/csv/i)) {
     csv = `data:text/csv;charset=utf-8,${csv}`;
   }
- const encodedURI = encodeURI(csv)
- const fixedEncodedURI = encodedURI.replaceAll('#', '%23');
+  const encodedURI = encodeURI(csv);
+  const fixedEncodedURI = encodedURI.replaceAll("#", "%23");
   link.setAttribute("href", fixedEncodedURI);
   link.setAttribute("download", filename);
   link.click();
@@ -88,11 +88,11 @@ const Export = ({ onExport }) => (
   </button>
 );
 
-const FnHome = (props) => {
+const DataTable = (props) => {
   const today = new Date();
   const sb = useSelector((state) => state.sb.option);
   const allData = props.fa_allData.fa_allData;
-  
+
   columns = Object.entries(allData[0]);
   columns = columns.map((el) => {
     var num = el[0].match(/\d+$/);
@@ -104,30 +104,35 @@ const FnHome = (props) => {
         sortable: true,
         format: (row) => `${row[el[0]].slice(0, 200)}`,
       };
-    } 
-    else if(el[0] === "DepreciationMethod" || el[0] === "AssetNLAccount" ) return
-    else if(num && num[0]!= 2022 && (Number(num[0]) != Number(today.getMonth()) + 1)) return
-      
+    } else if (el[0] === "DepreciationMethod" || el[0] === "AssetNLAccount")
+      return;
+    else if (
+      num &&
+      num[0] != 2022 &&
+      Number(num[0]) != Number(today.getMonth()) + 1
+    )
+      return;
+
     return {
       name: el[0],
       selector: (row) => row[el[0]],
       sortable: true,
     };
   });
-  columns = columns.filter(el => el)
+  columns = columns.filter((el) => el);
 
   data = allData.map((el, i) => {
     el.Description = el.Description.replaceAll(",", "");
-  
-    const obj =  { id: i + 1, ...el };
-    let {AssetNLAccount, DepreciationMethod, ... obj2} = obj
+
+    const obj = { id: i + 1, ...el };
+    let { AssetNLAccount, DepreciationMethod, ...obj2 } = obj;
     let entries = Object.entries(obj);
-    entries = entries.filter(el => {
-    const num = el[0].match(/\d+$/);
-    if(num && num[0]!= 2022 && num[0] != today.getMonth() + 1) return;
-    return el;
-    })
-    obj2 = Object.fromEntries(entries)
+    entries = entries.filter((el) => {
+      const num = el[0].match(/\d+$/);
+      if (num && num[0] != 2022 && num[0] != today.getMonth() + 1) return;
+      return el;
+    });
+    obj2 = Object.fromEntries(entries);
     return obj2;
   });
   const actionsMemo = React.useMemo(
@@ -151,7 +156,7 @@ const FnHome = (props) => {
           marginRight: 0,
         }}
       >
-        <DataTable
+        <_DataTable
           columns={columns}
           data={data}
           actions={actionsMemo}
@@ -166,4 +171,4 @@ const FnHome = (props) => {
   );
 };
 
-export default FnHome;
+export default DataTable;

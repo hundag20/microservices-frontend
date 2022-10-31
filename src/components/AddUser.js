@@ -14,7 +14,7 @@ const AddUser = () => {
 
   const enterNewUser = async (data) => {
     try {
-      const url = "http://172.20.117.47:3002/v1/addUser";
+      const url = "http://172.17.16.1:3002/v1/addUser";
       await axios.post(url, data);
       return { status: 200, msg: "user added successfully" };
     } catch (err) {

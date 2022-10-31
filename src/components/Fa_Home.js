@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { uiActions } from "../store/ui";
 import Sidebar from "./Sidebar";
-import FnHome from "./FnHome";
+import DataTable from "./ui/DataTable";
 import Header from "./ui/Header";
 import { sbActions } from "../store/sidebar";
 import AddUser from "./AddUser";
@@ -114,7 +114,7 @@ const Fa_Home = () => {
     if (effect.firstTime != true) {
       try {
         dispatch(uiActions.startLoad());
-        const url = `http://172.20.117.47:3002/v1/${sb}`;
+        const url = `http://172.17.16.1:3002/v1/${sb}`;
         axios
           .get(url)
           .then(async (response) => {
@@ -152,57 +152,56 @@ const Fa_Home = () => {
     }
   }, [sb]);
 
-    sidebarOptions = [
-      <li className="has-subnav">
-        <a href="#" onClick={fa.allHandler}>
-          <i className="fa fas fa-home"></i>
-          <span className="nav-text">All</span>
-        </a>
-      </li>,
-      <li className="has-subnav">
-        <a href="#" onClick={fa.fixedplantequipHandler}>
-          <i className="fa fas fa-bolt"></i>
-          <span className="nav-text">Fixed Plant Equipment</span>
-        </a>
-      </li>,
-      <li className="has-subnav">
-        <a href="#" onClick={fa.fixturefittingHandler}>
-          <i className="fa fas fa-retweet"></i>
-          <span className="nav-text">fixture & Fitting</span>
-        </a>
-      </li>,
-      <li className="has-subnav">
-        <a href="#" onClick={fa.freestandequipHandler}>
-          <i className="fa fas fa-calendar-alt"></i>
-          <span className="nav-text">free Stand Equipment</span>
-        </a>
-      </li>,
-      <li className="has-subnav">
-        <a href="#" onClick={fa.officeequipallHandler}>
-          <i className="fa fas fa-calendar-alt"></i>
-          <span className="nav-text">Office Equipment all</span>
-        </a>
-      </li>,
-      <li className="has-subnav">
-        <a href="#" onClick={fa.poolingHandler}>
-          <i className="fa fas fa-calendar-alt"></i>
-          <span className="nav-text">Pooling</span>
-        </a>
-      </li>,
-      <li className="has-subnav">
-        <a href="#" onClick={fa.vehicleHandler}>
-          <i className="fa fas fa-truck-pickup"></i>
-          <span className="nav-text">Vehicle</span>
-        </a>
-      </li>,
-      <li className="has-subnav">
-        <a href="#" onClick={fa.compHardHanlder}>
-          <i className="fa fas fa-tv"></i>
-          <span className="nav-text">Computer Hardware</span>
-        </a>
-      </li>,
-    ];
-  
+  sidebarOptions = [
+    <li className="has-subnav">
+      <a href="#" onClick={fa.allHandler}>
+        <i className="fa fas fa-home"></i>
+        <span className="nav-text">All</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.fixedplantequipHandler}>
+        <i className="fa fas fa-bolt"></i>
+        <span className="nav-text">Fixed Plant Equipment</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.fixturefittingHandler}>
+        <i className="fa fas fa-retweet"></i>
+        <span className="nav-text">fixture & Fitting</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.freestandequipHandler}>
+        <i className="fa fas fa-calendar-alt"></i>
+        <span className="nav-text">free Stand Equipment</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.officeequipallHandler}>
+        <i className="fa fas fa-calendar-alt"></i>
+        <span className="nav-text">Office Equipment all</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.poolingHandler}>
+        <i className="fa fas fa-calendar-alt"></i>
+        <span className="nav-text">Pooling</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.vehicleHandler}>
+        <i className="fa fas fa-truck-pickup"></i>
+        <span className="nav-text">Vehicle</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.compHardHanlder}>
+        <i className="fa fas fa-tv"></i>
+        <span className="nav-text">Computer Hardware</span>
+      </a>
+    </li>,
+  ];
 
   if (!isLoggedIn) {
     return <Navigate to="/Login" replace />;
@@ -214,7 +213,7 @@ const Fa_Home = () => {
       <Sidebar sidebarOptions={sidebarOptions} />
       <Header />
 
-      {fa_allData && <FnHome fa_allData={fa_allData} sb={sb} />}
+      {fa_allData && <DataTable fa_allData={fa_allData} sb={sb} />}
     </div>
   );
 };

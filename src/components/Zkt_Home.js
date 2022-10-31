@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { uiActions } from "../store/ui";
 import Sidebar from "./Sidebar";
-import FnHome from "./FnHome";
 import Header from "./ui/Header";
 import { sbActions } from "../store/sidebar";
 import AddUser from "./AddUser";
@@ -47,28 +46,17 @@ const Home = () => {
     dispatch(uiActions.startLoad());
   };
 
-  const finHomeHandler = async (event) => {
-    effect.firstTime = false;
-    dispatch(sbActions.switch({ option: "fnhome" }));
-    dispatch(uiActions.startLoad());
-  };
   useEffect(() => {
     if (effect.firstTime != true) {
       try {
       } catch (err) {
         console.log(err);
       }
-      const url = `http://172.20.117.16:3001/v1/${sb}`;
-      // console.log(sb, url);
+      const url = `http://172.17.16.1:3001/v1/${sb}`;
       axios
         .get(url)
         .then(async (response) => {
           const data = response.data.data;
-
-          // indexOfLastRecord = currentPage * recordsPerPage;
-          // indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-          // currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
-          // nPages = Math.ceil(data.length / recordsPerPage);
 
           setAllData({ allData: data });
           dispatch(uiActions.stopLoad());
@@ -107,18 +95,6 @@ const Home = () => {
           <span className="nav-text">Add user</span>
         </a>
       </li>,
-      // <li className="has-subnav">
-      //   <a href="#">
-      //     <i className="fa far fa-bullhorn"></i>
-      //     <span className="nav-text">Pay</span>
-      //   </a>
-      // </li>,
-      // <li className="has-subnav">
-      //   <a href="#">
-      //     <i className="fa fas fa-rss"></i>
-      //     <span className="nav-text">Get News</span>
-      //   </a>
-      // </li>,
     ];
   } else if (userData.role === "hr") {
     sidebarOptions = [
@@ -141,27 +117,6 @@ const Home = () => {
         </a>
       </li>,
     ];
-  } else if (userData.role === "finance") {
-    sidebarOptions = [
-      <li className="has-subnav">
-        <a href="#" onClick={finHomeHandler}>
-          <i className="fa fas fa-home"></i>
-          <span className="nav-text">Home</span>
-        </a>
-      </li>,
-      // <li className="has-subnav">
-      //   <a href="#" onClick={yestHandler}>
-      //     <i className="fa fas fa-retweet"></i>
-      //     <span className="nav-text">Yesterday</span>
-      //   </a>
-      // </li>,
-      // <li className="has-subnav">
-      //   <a href="#" onClick={lastWeekHandler}>
-      //     <i className="fa fas fa-calendar-alt"></i>
-      //     <span className="nav-text">Last Week</span>
-      //   </a>
-      // </li>,
-    ];
   }
 
   if (!isLoggedIn) {
@@ -175,8 +130,7 @@ const Home = () => {
       <Sidebar sidebarOptions={sidebarOptions} />
       <Header />
       {sb === "addUser" && <AddUser />}
-      {sb === "fnhome" && <FnHome />}
-      {allData && sb != "fnhome" && (
+      {allData && sb != "fahome" && (
         <Paginate
           data={allData}
           itemsCountPerPage={10}
