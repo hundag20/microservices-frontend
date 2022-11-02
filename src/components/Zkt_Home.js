@@ -10,6 +10,8 @@ import { sbActions } from "../store/sidebar";
 import AddUser from "./AddUser";
 import SpinLoader from "./ui/SpinLoader";
 import Paginate from "./ui/Paginate";
+import { _host, _port } from "../index.js";
+
 let effect = {
   firstTime: true,
 };
@@ -47,12 +49,25 @@ const Home = () => {
   };
 
   useEffect(() => {
+    //auth&admin at front-end.port + 1 && zkt basic/hr/ at front-end.port + 2 && finance at front-end.port + 3
+    let port = Number(_port);
+    switch (userData.role) {
+      case "admin":
+        port = port + 1;
+        break;
+      case "hr":
+        port = port + 2;
+        break;
+      case "finance":
+        port = port + 3;
+        break;
+    }
     if (effect.firstTime != true) {
       try {
       } catch (err) {
         console.log(err);
       }
-      const url = `http://172.17.16.1:3001/v1/${sb}`;
+      const url = `http://${_host}:${port}/v1/${sb}`;
       axios
         .get(url)
         .then(async (response) => {

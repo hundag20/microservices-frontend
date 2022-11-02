@@ -12,7 +12,6 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 import axios from "axios";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,6 +22,7 @@ import SpinLoader from "./ui/SpinLoader";
 import { Navigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { sbActions } from "../store/sidebar";
+import { _host, _port } from "../index.js";
 
 function Copyright(props) {
   return (
@@ -63,10 +63,6 @@ const Login = () => {
   const token = useSelector((state) => state.auth.accessToken);
   const isPending = useSelector((state) => state.ui.isLoading);
 
-  console.log("isPending", isPending);
-  console.log("role is: ", userData.role);
-  console.log("token is: ", token);
-  console.log("token name is: ", cookies.token);
   const handleSubmit = async (event) => {
     notFirstTime = true;
     event.preventDefault();
@@ -76,7 +72,6 @@ const Login = () => {
       password: data.get("password"),
     };
     data.role = data.username.length === 5 ? "officer" : "driver";
-    console.log("ispending: ", isPending);
     //on submit validation
     if (!(await unameIsValid(data.username))) {
       dispatch(uiActions.notif({ type: "danger", msg: "invalid username" }));
@@ -89,10 +84,13 @@ const Login = () => {
   };
 
   useEffect(() => {
+    //auth&admin at front-end.port + 1 && zkt basic/hr/ at front-end.port + 2 && finance at front-end.port + 3
+    let port = Number(_port) + 1;
     if (notFirstTime && isPending) {
+      //auth is at front-end.port + 1
       axios
         .get(
-          `http://172.17.16.1:3001/v1/login?username=${data.username}&password=${data.password}`
+          `http://${_host}:${port}/v1/login?username=${data.username}&password=${data.password}`
         )
         .then(function (response) {
           // handle success

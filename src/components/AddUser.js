@@ -5,16 +5,31 @@ import { useSelector, useDispatch } from "react-redux";
 import Login from "./Login";
 import { uiActions } from "../store/ui";
 import Notify from "./ui/Notify";
+import { _host, _port } from "../index.js";
 
 const AddUser = () => {
   const dispatch = useDispatch();
+  const userData = useSelector((state) => state.auth.userData);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const errType = useSelector((state) => state.ui.notif.type);
   const isPending = useSelector((state) => state.ui.isLoading);
 
   const enterNewUser = async (data) => {
     try {
-      const url = "http://172.17.16.1:3002/v1/addUser";
+      //auth&admin at front-end.port + 1 && zkt basic/hr/ at front-end.port + 2 && finance at front-end.port + 3
+      let port = Number(_port);
+      switch (userData.role) {
+        case "admin":
+          port = port + 1;
+          break;
+        case "hr":
+          port = port + 2;
+          break;
+        case "finance":
+          port = port + 3;
+          break;
+      }
+      const url = `http://${_host}:${port}/v1/addUser`;
       await axios.post(url, data);
       return { status: 200, msg: "user added successfully" };
     } catch (err) {
