@@ -5,6 +5,10 @@ import { Provider } from "react-redux";
 import store from "./store/index";
 import "./index.css";
 import App from "./App";
+import Cookies from "universal-cookie";
+
+export const cookies = new Cookies();
+
 export const _host = window.location.host.split(":")[0];
 export const _port = window.location.host.split(":")[1];
 

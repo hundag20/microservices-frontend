@@ -10,7 +10,7 @@ import { sbActions } from "../store/sidebar";
 import AddUser from "./AddUser";
 import SpinLoader from "./ui/SpinLoader";
 import Paginate from "./ui/Paginate";
-import { _host, _port } from "../index.js";
+import { _host, _port, cookies } from "../index.js";
 
 let effect = {
   firstTime: true,
@@ -63,13 +63,13 @@ const Home = () => {
         break;
     }
     if (effect.firstTime != true) {
-      try {
-      } catch (err) {
-        console.log(err);
-      }
+      const token = cookies.get("token");
+
       const url = `http://${_host}:${port}/v1/${sb}`;
       axios
-        .get(url)
+        .post(url, {
+          x_access_token: token,
+        })
         .then(async (response) => {
           const data = response.data.data;
 

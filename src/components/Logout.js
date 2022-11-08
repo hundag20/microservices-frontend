@@ -1,14 +1,14 @@
 import { authActions } from "../store/auth";
-import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
+import { cookies } from "../index.js";
 
 const Logout = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token", "role"]);
   const dispatch = useDispatch();
 
-  const logoutHandler = () => {
-    removeCookie("cookie");
-    removeCookie("role");
+  const logoutHandler = (event) => {
+    event.preventDefault();
+    cookies.remove("token");
+    cookies.remove("role");
     dispatch(authActions.logout());
   };
 

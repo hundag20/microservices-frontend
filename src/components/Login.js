@@ -20,9 +20,8 @@ import { uiActions } from "../store/ui";
 import Notify from "./ui/Notify";
 import SpinLoader from "./ui/SpinLoader";
 import { Navigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 import { sbActions } from "../store/sidebar";
-import { _host, _port } from "../index.js";
+import { _host, _port, cookies } from "../index.js";
 
 function Copyright(props) {
   return (
@@ -55,7 +54,6 @@ const unameIsValid = async (uname) => {
 };
 
 const Login = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["token", "role"]);
   const dispatch = useDispatch();
   const errType = useSelector((state) => state.ui.notif.type);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -75,8 +73,8 @@ const Login = () => {
     //on submit validation
     if (!(await unameIsValid(data.username))) {
       dispatch(uiActions.notif({ type: "danger", msg: "invalid username" }));
-    } else if (data.password.length != 8 || data.password.includes("*")) {
-      dispatch(uiActions.notif({ type: "danger", msg: "invalid password" }));
+      // } else if (data.password.length != 8 || data.password.includes("*")) {
+      //   dispatch(uiActions.notif({ type: "danger", msg: "invalid password" }));
     } else {
       dispatch(uiActions.notif({ type: "", msg: "" }));
       dispatch(uiActions.startLoad());
@@ -86,12 +84,15 @@ const Login = () => {
   useEffect(() => {
     //auth&admin at front-end.port + 1 && zkt basic/hr/ at front-end.port + 2 && finance at front-end.port + 3
     let port = Number(_port) + 1;
-    if (notFirstTime && isPending) {
+    const token = cookies.get("token");
+    console.log("notFirstTime", notFirstTime);
+    if (!notFirstTime && token) {
+      notFirstTime = true;
       //auth is at front-end.port + 1
       axios
-        .get(
-          `http://${_host}:${port}/v1/login?username=${data.username}&password=${data.password}`
-        )
+        .post(`http://${_host}:${port}/v1/verify`, {
+          x_access_token: token,
+        })
         .then(function (response) {
           // handle success
           dispatch(uiActions.stopLoad());
@@ -101,8 +102,40 @@ const Login = () => {
               accessToken: response.data.accessToken,
             })
           );
-          setCookie("token", response.data.accessToken);
-          setCookie("role", response.data.userData.role);
+
+          if (response.data.userData.role === "finance")
+            dispatch(sbActions.switch({ option: "fa_dashboard" }));
+          else dispatch(sbActions.switch({ option: "dashboard" }));
+        })
+        .catch(function (error) {
+          dispatch(uiActions.stopLoad());
+        });
+    }
+  }, [notFirstTime, isLoggedIn, isPending, dispatch]);
+
+  useEffect(() => {
+    //auth&admin at front-end.port + 1 && zkt basic/hr/ at front-end.port + 2 && finance at front-end.port + 3
+    let port = Number(_port) + 1;
+    if (notFirstTime && isPending) {
+      const url = `http://${_host}:${port}/v1/login`;
+      //auth is at front-end.port + 1
+      axios
+        .post(url, {
+          username: data.username,
+          password: data.password,
+        })
+        .then(function (response) {
+          // handle success
+          dispatch(uiActions.stopLoad());
+          dispatch(
+            authActions.login({
+              userData: response.data.userData,
+              accessToken: response.data.accessToken,
+            })
+          );
+          cookies.set("token", response.data.accessToken, { path: "/" });
+          cookies.set("role", response.data.userData.role, { path: "/" });
+
           if (response.data.userData.role === "finance")
             dispatch(sbActions.switch({ option: "fa_dashboard" }));
           else dispatch(sbActions.switch({ option: "dashboard" }));
@@ -132,7 +165,7 @@ const Login = () => {
           }
         });
     }
-  }, [isLoggedIn, isPending, dispatch]);
+  }, [notFirstTime, isLoggedIn, isPending, dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -210,3 +243,4 @@ const Login = () => {
 };
 
 export default { Login, unameIsValid };
+//- call veirfy as a middleware on every protected endpoint in each project

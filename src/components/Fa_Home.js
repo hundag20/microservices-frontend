@@ -9,7 +9,7 @@ import DataTable from "./ui/DataTable";
 import Header from "./ui/Header";
 import { sbActions } from "../store/sidebar";
 import SpinLoader from "./ui/SpinLoader";
-import { _host, _port } from "../index.js";
+import { _host, _port, cookies } from "../index.js";
 
 let effect = {
   firstTime: true,
@@ -126,10 +126,13 @@ const Fa_Home = () => {
             port = port + 3;
             break;
         }
+        const token = cookies.get("token");
         dispatch(uiActions.startLoad());
         const url = `http://${_host}:${port}/v1/${sb}`;
         axios
-          .get(url)
+          .post(url, {
+            x_access_token: token,
+          })
           .then(async (response) => {
             const data = response.data.data;
 
