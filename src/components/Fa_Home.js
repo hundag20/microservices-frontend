@@ -19,6 +19,7 @@ const Fa_Home = () => {
   const dispatch = useDispatch();
 
   const [fa_allData, setfa_AllData] = useState(0);
+  const feature = useSelector((state) => state.feature);
   const errType = useSelector((state) => state.ui.notif.type);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const userData = useSelector((state) => state.auth.userData);
@@ -111,13 +112,21 @@ const Fa_Home = () => {
     },
   };
   useEffect(() => {
-    if (effect.firstTime != true) {
+    if (
+      effect.firstTime != true &&
+      sb != "fa_dashboard" &&
+      sb != "dashboard" &&
+      sb != "today" &&
+      sb != "yest" &&
+      sb != "week"
+    ) {
       try {
         //auth&admin at front-end.port + 1 && zkt basic/hr/ at front-end.port + 2 && finance at front-end.port + 3
         let port = Number(_port);
         switch (userData.role) {
           case "admin":
-            port = port + 1;
+            if (feature.feature === "hr") port = port + 2;
+            if (feature.feature === "finance") port = port + 3;
             break;
           case "hr":
             port = port + 2;

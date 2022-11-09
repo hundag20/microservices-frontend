@@ -7,7 +7,6 @@ import { uiActions } from "../store/ui";
 import Sidebar from "./Sidebar";
 import Header from "./ui/Header";
 import { sbActions } from "../store/sidebar";
-import AddUser from "./AddUser";
 import SpinLoader from "./ui/SpinLoader";
 import Paginate from "./ui/Paginate";
 import { _host, _port, cookies } from "../index.js";
@@ -16,10 +15,11 @@ let effect = {
   firstTime: true,
 };
 
-const Home = () => {
+const ZktHome = () => {
   const dispatch = useDispatch();
 
   const [allData, setAllData] = useState(0);
+  const feature = useSelector((state) => state.feature);
   const errType = useSelector((state) => state.ui.notif.type);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const userData = useSelector((state) => state.auth.userData);
@@ -28,10 +28,7 @@ const Home = () => {
 
   //switch is a state
   let sidebarOptions = [];
-  const addUserHanlder = (event) => {
-    // event.preventDefault();
-    dispatch(sbActions.switch({ option: "addUser" }));
-  };
+
   const todayHandler = async (event) => {
     effect.firstTime = false;
     dispatch(uiActions.startLoad());
@@ -47,13 +44,13 @@ const Home = () => {
     dispatch(sbActions.switch({ option: "week" }));
     dispatch(uiActions.startLoad());
   };
-
   useEffect(() => {
     //auth&admin at front-end.port + 1 && zkt basic/hr/ at front-end.port + 2 && finance at front-end.port + 3
     let port = Number(_port);
     switch (userData.role) {
       case "admin":
-        port = port + 1;
+        if (feature.feature === "hr") port = port + 2;
+        if (feature.feature === "finance") port = port + 3;
         break;
       case "hr":
         port = port + 2;
@@ -62,7 +59,12 @@ const Home = () => {
         port = port + 3;
         break;
     }
-    if (effect.firstTime != true) {
+    if (
+      effect.firstTime != true &&
+      sb != "dashboard" &&
+      sb != "fa_dashboard" &&
+      (sb === "today" || sb === "yest" || sb === "week")
+    ) {
       const token = cookies.get("token");
 
       const url = `http://${_host}:${port}/v1/${sb}`;
@@ -102,16 +104,7 @@ const Home = () => {
     }
   }, [sb]);
 
-  if (userData.role === "admin") {
-    sidebarOptions = [
-      <li className="has-subnav" key={1}>
-        <a href="#" onClick={addUserHanlder}>
-          <i className="fa fas fa-user-plus"></i>
-          <span className="nav-text">Add user</span>
-        </a>
-      </li>,
-    ];
-  } else if (userData.role === "hr") {
+  if (userData.role === "hr" || userData.role === "admin") {
     sidebarOptions = [
       <li className="has-subnav">
         <a href="#" onClick={todayHandler}>
@@ -144,7 +137,6 @@ const Home = () => {
       {isPending && <SpinLoader />}
       <Sidebar sidebarOptions={sidebarOptions} />
       <Header />
-      {sb === "addUser" && <AddUser />}
       {allData && sb != "fahome" && (
         <Paginate
           data={allData}
@@ -157,7 +149,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default ZktHome;
 /*
 TODO: make sidebar sticky
 FIXME: handle allData@home=empty array -> Pass empty error

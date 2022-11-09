@@ -1,13 +1,18 @@
 import StyledDiv from "./styles/sidebarStyle";
 import Logout from "./Logout";
+import AdminReset from "./AdminReset";
 import { useSelector } from "react-redux";
 import logo from "../img/logo.png";
 import nologo from "../img/no-logo.PNG";
 
 const Sidebar = (props) => {
   const userData = useSelector((state) => state.auth.userData);
-  const pic = userData.role === 'finance' ? nologo : logo;
- 
+  const feature = useSelector((state) => state.feature);
+  const pic =
+    userData.role === "finance" || feature.feature === "finance"
+      ? nologo
+      : logo;
+
   return (
     <StyledDiv>
       <section>
@@ -26,6 +31,11 @@ const Sidebar = (props) => {
             </ul>
 
             <ul className="logout">
+              {feature.feature && (
+                <li>
+                  <AdminReset />
+                </li>
+              )}
               <li>
                 <Logout />
               </li>

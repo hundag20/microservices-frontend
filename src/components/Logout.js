@@ -1,4 +1,5 @@
 import { authActions } from "../store/auth";
+import { featureActions } from "../store/feature";
 import { useDispatch } from "react-redux";
 import { cookies } from "../index.js";
 
@@ -10,6 +11,7 @@ const Logout = () => {
     cookies.remove("token");
     cookies.remove("role");
     dispatch(authActions.logout());
+    dispatch(featureActions.clear());
   };
 
   return (

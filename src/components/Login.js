@@ -6,7 +6,6 @@ import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
@@ -169,11 +168,12 @@ const Login = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      {token && userData.role != "finance" && (
-        <Navigate to="/zkt_home" replace />
-      )}
+      {token && userData.role === "hr" && <Navigate to="/zkt_home" replace />}
       {token && userData.role === "finance" && (
         <Navigate to="/fa_home" replace />
+      )}
+      {token && userData.role === "admin" && (
+        <Navigate to="/admin_home" replace />
       )}
       <Container
         component="main"
@@ -243,4 +243,3 @@ const Login = () => {
 };
 
 export default { Login, unameIsValid };
-//- call veirfy as a middleware on every protected endpoint in each project
