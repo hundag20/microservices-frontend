@@ -1,4 +1,4 @@
-<img> <source src="https://imgur.com/a/ahJrpXP"> </img>.
+<img src="https://imgur.com/a/ahJrpXP" width="40" height="40" />
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
