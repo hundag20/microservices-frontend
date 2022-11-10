@@ -1,4 +1,4 @@
-<img src="https://imgur.com/0z7NfGo" width="40" height="40" />
+<img src="[Imgur](https://imgur.com/0z7NfGo)" width="40" height="40" />
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
