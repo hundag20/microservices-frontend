@@ -1,4 +1,4 @@
-<img src="https://media.giphy.com/media/uD0TrYrOe2gdTBE3MW/giphy.gif" width="40" height="40" />
+<img src="https://media.giphy.com/media/uD0TrYrOe2gdTBE3MW/giphy.gif" width="400" height="400" />
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
