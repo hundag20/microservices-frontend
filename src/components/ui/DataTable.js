@@ -122,7 +122,7 @@ const DataTable = (props) => {
   columns = columns.filter((el) => el);
 
   data = allData.map((el, i) => {
-    el.Description = el.Description.replaceAll(",", "");
+    if (el.Description) el.Description = el.Description.replaceAll(",", "");
 
     const obj = { id: i + 1, ...el };
     let { AssetNLAccount, DepreciationMethod, ...obj2 } = obj;

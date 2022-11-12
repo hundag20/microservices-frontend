@@ -172,6 +172,9 @@ const Login = () => {
       {token && userData.role === "finance" && (
         <Navigate to="/fa_home" replace />
       )}
+      {token && userData.role === "service" && (
+        <Navigate to="/as_home" replace />
+      )}
       {token && userData.role === "admin" && (
         <Navigate to="/admin_home" replace />
       )}
