@@ -10,6 +10,7 @@ import Header from "./ui/Header";
 import { sbActions } from "../store/sidebar";
 import SpinLoader from "./ui/SpinLoader";
 import { _host, _port, cookies } from "../index.js";
+import AssetMasterLogo from "./ui/AssetMasterLogo";
 
 let effect = {
   firstTime: true,
@@ -236,7 +237,9 @@ const Fa_Home = () => {
       {errType && <Notify />}
       {isPending && <SpinLoader />}
       <Sidebar sidebarOptions={sidebarOptions} />
-      <Header />
+
+      {(sb != "dashboard" || sb != "fa_dashboard") && <Header />}
+      {(sb === "dashboard" || sb === "fa_dashboard") && <AssetMasterLogo />}
 
       {fa_allData && <DataTable fa_allData={fa_allData} sb={sb} />}
     </div>

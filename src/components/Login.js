@@ -31,10 +31,7 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="#">
-        ZKT 5.0 client
-      </Link>{" "}
-      {new Date().getFullYear()}
+      <Link color="inherit" href="#"></Link> {new Date().getFullYear()}
       {"."}
     </Typography>
   );
