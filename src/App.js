@@ -12,8 +12,7 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/zkt_home" element={<Zkt_Home />} />
       <Route path="/fa_home" element={<Fa_Home />} />
-      <Route path="/as_home" element={<AsHome />} />
-      <Route path="/admin_home" element={<AdminHome />} />
+      <Route path="/adminhome" element={<AdminHome />} />
     </Routes>
   );
 }

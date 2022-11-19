@@ -1,17 +1,15 @@
 import { authActions } from "../store/auth";
-import { featureActions } from "../store/feature";
+import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
-import { cookies } from "../index.js";
 
 const Logout = () => {
+  const [cookies, setCookie, removeCookie] = useCookies(["token", "role"]);
   const dispatch = useDispatch();
 
-  const logoutHandler = (event) => {
-    event.preventDefault();
-    cookies.remove("token");
-    cookies.remove("role");
+  const logoutHandler = () => {
+    removeCookie("cookie");
+    removeCookie("role");
     dispatch(authActions.logout());
-    dispatch(featureActions.clear());
   };
 
   return (
@@ -21,5 +19,4 @@ const Logout = () => {
     </a>
   );
 };
-
 export default Logout;

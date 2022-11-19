@@ -9,27 +9,21 @@ import DataTable from "./ui/DataTable";
 import Header from "./ui/Header";
 import { sbActions } from "../store/sidebar";
 import SpinLoader from "./ui/SpinLoader";
-import { _host, _port, cookies } from "../index.js";
-import AssetMasterLogo from "./ui/AssetMasterLogo";
+import { _host, _port } from "../index.js";
 
 let effect = {
   firstTime: true,
 };
-
 const Fa_Home = () => {
   const dispatch = useDispatch();
-
   const [fa_allData, setfa_AllData] = useState(0);
-  const feature = useSelector((state) => state.feature);
   const errType = useSelector((state) => state.ui.notif.type);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const userData = useSelector((state) => state.auth.userData);
   const sb = useSelector((state) => state.sb.option);
   const isPending = useSelector((state) => state.ui.isLoading);
-
   //switch is a state
   let sidebarOptions = [];
-
   const fa = {
     allHandler: async (event) => {
       dispatch(
@@ -113,21 +107,13 @@ const Fa_Home = () => {
     },
   };
   useEffect(() => {
-    if (
-      effect.firstTime != true &&
-      sb != "fa_dashboard" &&
-      sb != "dashboard" &&
-      sb != "today" &&
-      sb != "yest" &&
-      sb != "week"
-    ) {
+    if (effect.firstTime != true) {
       try {
         //auth&admin at front-end.port + 1 && zkt basic/hr/ at front-end.port + 2 && finance at front-end.port + 3
         let port = Number(_port);
         switch (userData.role) {
           case "admin":
-            if (feature.feature === "hr") port = port + 2;
-            if (feature.feature === "finance") port = port + 3;
+            port = port + 1;
             break;
           case "hr":
             port = port + 2;
@@ -136,13 +122,10 @@ const Fa_Home = () => {
             port = port + 3;
             break;
         }
-        const token = cookies.get("token");
         dispatch(uiActions.startLoad());
         const url = `http://${_host}:${port}/v1/${sb}`;
         axios
-          .post(url, {
-            x_access_token: token,
-          })
+          .get(url)
           .then(async (response) => {
             const data = response.data.data;
 
@@ -152,7 +135,6 @@ const Fa_Home = () => {
           .catch(function (error) {
             effect.switch = false;
             dispatch(uiActions.stopLoad());
-
             // handle error
             if (error?.response?.data && error?.response?.data?.error) {
               console.log("err @ axios: ", error.response.data.error);
@@ -177,7 +159,6 @@ const Fa_Home = () => {
       }
     }
   }, [sb]);
-
   sidebarOptions = [
     <li className="has-subnav">
       <a href="#" onClick={fa.allHandler}>
@@ -228,7 +209,6 @@ const Fa_Home = () => {
       </a>
     </li>,
   ];
-
   if (!isLoggedIn) {
     return <Navigate to="/Login" replace />;
   }
@@ -237,15 +217,11 @@ const Fa_Home = () => {
       {errType && <Notify />}
       {isPending && <SpinLoader />}
       <Sidebar sidebarOptions={sidebarOptions} />
-
-      {(sb != "dashboard" || sb != "fa_dashboard") && <Header />}
-      {(sb === "dashboard" || sb === "fa_dashboard") && <AssetMasterLogo />}
-
+      <Header />
       {fa_allData && <DataTable fa_allData={fa_allData} sb={sb} />}
     </div>
   );
 };
-
 export default Fa_Home;
 /*
 TODO: make sidebar sticky

@@ -9,28 +9,23 @@ import DataTable from "./ui/DataTable";
 import Header from "./ui/Header";
 import { sbActions } from "../store/sidebar";
 import SpinLoader from "./ui/SpinLoader";
-import { _host, _port, cookies } from "../index.js";
+import { _host, _port } from "../index.js";
 
 let effect = {
   firstTime: true,
 };
-
-const AsHome = () => {
+const Fa_Home = () => {
   const dispatch = useDispatch();
-
   const [fa_allData, setfa_AllData] = useState(0);
-  const feature = useSelector((state) => state.feature);
   const errType = useSelector((state) => state.ui.notif.type);
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const userData = useSelector((state) => state.auth.userData);
   const sb = useSelector((state) => state.sb.option);
   const isPending = useSelector((state) => state.ui.isLoading);
-
   //switch is a state
   let sidebarOptions = [];
-
   const fa = {
-    outHandler: async (event) => {
+    allHandler: async (event) => {
       dispatch(
         uiActions.notif({
           type: "",
@@ -38,21 +33,87 @@ const AsHome = () => {
         })
       );
       effect.firstTime = false;
-      dispatch(sbActions.switch({ option: "out" }));
+      dispatch(sbActions.switch({ option: "all" }));
+    },
+    fixedplantequipHandler: async (event) => {
+      dispatch(
+        uiActions.notif({
+          type: "",
+          msg: "",
+        })
+      );
+      effect.firstTime = false;
+      dispatch(sbActions.switch({ option: "fixedplantequip" }));
+    },
+    fixturefittingHandler: async (event) => {
+      dispatch(
+        uiActions.notif({
+          type: "",
+          msg: "",
+        })
+      );
+      effect.firstTime = false;
+      dispatch(sbActions.switch({ option: "fixturefitting" }));
+    },
+    freestandequipHandler: async (event) => {
+      dispatch(
+        uiActions.notif({
+          type: "",
+          msg: "",
+        })
+      );
+      effect.firstTime = false;
+      dispatch(sbActions.switch({ option: "freestandequip" }));
+    },
+    officeequipallHandler: async (event) => {
+      dispatch(
+        uiActions.notif({
+          type: "",
+          msg: "",
+        })
+      );
+      effect.firstTime = false;
+      dispatch(sbActions.switch({ option: "officeequipall" }));
+    },
+    poolingHandler: async (event) => {
+      dispatch(
+        uiActions.notif({
+          type: "",
+          msg: "",
+        })
+      );
+      effect.firstTime = false;
+      dispatch(sbActions.switch({ option: "pooling" }));
+    },
+    vehicleHandler: async (event) => {
+      dispatch(
+        uiActions.notif({
+          type: "",
+          msg: "",
+        })
+      );
+      effect.firstTime = false;
+      dispatch(sbActions.switch({ option: "vehicle" }));
+    },
+    compHardHanlder: async (event) => {
+      dispatch(
+        uiActions.notif({
+          type: "",
+          msg: "",
+        })
+      );
+      effect.firstTime = false;
+      dispatch(sbActions.switch({ option: "compHard" }));
     },
   };
-  console.log("sidebar currently: ", sb);
   useEffect(() => {
-    if (sb === "out") {
-      console.log("running");
+    if (effect.firstTime != true) {
       try {
         //auth&admin at front-end.port + 1 && zkt basic/hr/ at front-end.port + 2 && finance at front-end.port + 3
         let port = Number(_port);
         switch (userData.role) {
           case "admin":
-            if (feature.feature === "hr") port = port + 2;
-            if (feature.feature === "finance") port = port + 3;
-            if (feature.feature === "as") port = port + 3;
+            port = port + 1;
             break;
           case "hr":
             port = port + 2;
@@ -61,13 +122,10 @@ const AsHome = () => {
             port = port + 3;
             break;
         }
-        const token = cookies.get("token");
         dispatch(uiActions.startLoad());
         const url = `http://${_host}:${port}/v1/${sb}`;
         axios
-          .post(url, {
-            x_access_token: token,
-          })
+          .get(url)
           .then(async (response) => {
             const data = response.data.data;
 
@@ -77,7 +135,6 @@ const AsHome = () => {
           .catch(function (error) {
             effect.switch = false;
             dispatch(uiActions.stopLoad());
-
             // handle error
             if (error?.response?.data && error?.response?.data?.error) {
               console.log("err @ axios: ", error.response.data.error);
@@ -102,16 +159,56 @@ const AsHome = () => {
       }
     }
   }, [sb]);
-
   sidebarOptions = [
     <li className="has-subnav">
-      <a href="#" onClick={fa.outHandler}>
+      <a href="#" onClick={fa.allHandler}>
         <i className="fa fas fa-home"></i>
-        <span className="nav-text">Outstanding</span>
+        <span className="nav-text">All</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.fixedplantequipHandler}>
+        <i className="fa fas fa-bolt"></i>
+        <span className="nav-text">Fixed Plant Equipment</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.fixturefittingHandler}>
+        <i className="fa fas fa-retweet"></i>
+        <span className="nav-text">fixture & Fitting</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.freestandequipHandler}>
+        <i className="fa fas fa-calendar-alt"></i>
+        <span className="nav-text">free Stand Equipment</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.officeequipallHandler}>
+        <i className="fa fas fa-calendar-alt"></i>
+        <span className="nav-text">Office Equipment all</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.poolingHandler}>
+        <i className="fa fas fa-calendar-alt"></i>
+        <span className="nav-text">Pooling</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.vehicleHandler}>
+        <i className="fa fas fa-truck-pickup"></i>
+        <span className="nav-text">Vehicle</span>
+      </a>
+    </li>,
+    <li className="has-subnav">
+      <a href="#" onClick={fa.compHardHanlder}>
+        <i className="fa fas fa-tv"></i>
+        <span className="nav-text">Computer Hardware</span>
       </a>
     </li>,
   ];
-
   if (!isLoggedIn) {
     return <Navigate to="/Login" replace />;
   }
@@ -121,13 +218,11 @@ const AsHome = () => {
       {isPending && <SpinLoader />}
       <Sidebar sidebarOptions={sidebarOptions} />
       <Header />
-
       {fa_allData && <DataTable fa_allData={fa_allData} sb={sb} />}
     </div>
   );
 };
-
-export default AsHome;
+export default Fa_Home;
 /*
 TODO: make sidebar sticky
 FIXME: handle allData@home=empty array -> Pass empty error
