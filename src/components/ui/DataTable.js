@@ -89,11 +89,12 @@ const Export = ({ onExport }) => (
 );
 
 const DataTable = (props) => {
+  
   const today = new Date();
   const [loading, setLoading] = useState(false);
-
+  
   const sb = useSelector((state) => state.sb.option);
-  const [allData, setAllData] = useState(props.fa_allData.fa_allData);
+  const allData = props.fa_allData.fa_allData;
 
   const [YTDBV_month, setYTDBV_month] = useState(today.getMonth() + 1);
   const [YTDDE_month, setYTDDE_month] = useState(today.getMonth() + 1);
@@ -153,7 +154,7 @@ const DataTable = (props) => {
   });
   //maybe month counter jst a var not a state
   columns = columns.filter((el) => el);
-  console.log("columns", columns);
+  // console.log("columns", columns);
   data = allData.map((el, i) => {
     if (el.Description) el.Description = el.Description.replaceAll(",", "");
 
@@ -221,25 +222,25 @@ const DataTable = (props) => {
         <div className="monthControlNav">
           <Button onClick={() => YTDDE_monthUp()}>
             <p>
-              <i class="fas fa-plus-circle"></i>
+              <i className="fas fa-plus-circle"></i>
               {`YTD Dep'n End of month (now showing month: ${YTDDE_month})`}
             </p>
           </Button>
           <Button onClick={() => YTDDE_monthDown()}>
             <p>
-              <i class="fas fa-minus-circle"></i>
+              <i className="fas fa-minus-circle"></i>
               {`YTD Dep'n End of month (now showing month: ${YTDDE_month})`}
             </p>
           </Button>
           <Button onClick={() => YTDBV_monthUp()}>
             <p>
-              <i class="fas fa-plus-circle"></i>
+              <i className="fas fa-plus-circle"></i>
               {` YTD BookValue of month (now showing month: ${YTDBV_month})`}
             </p>
           </Button>
           <Button onClick={() => YTDBV_monthDown()}>
             <p>
-              <i class="fas fa-minus-circle"></i>
+              <i className="fas fa-minus-circle"></i>
               {`YTD BookValue of month (now showing month: ${YTDBV_month})`}
             </p>
           </Button>
