@@ -35,6 +35,16 @@ const Fa_Home = () => {
       effect.firstTime = false;
       dispatch(sbActions.switch({ option: "all" }));
     },
+    GroupHandler: async (event) => {
+      dispatch(
+        uiActions.notif({
+          type: "",
+          msg: "",
+        })
+      );
+      effect.firstTime = false;
+      dispatch(sbActions.switch({ option: "Group" }));
+    },
     fixedplantequipHandler: async (event) => {
       dispatch(
         uiActions.notif({
@@ -164,6 +174,12 @@ const Fa_Home = () => {
       <a href="#" onClick={fa.allHandler}>
         <i className="fa fas fa-home"></i>
         <span className="nav-text">All</span>
+      </a>
+    </li>,
+      <li className="has-subnav">
+      <a href="#" onClick={fa.GroupHandler}>
+        <i className="fa fas fa-home"></i>
+        <span className="nav-text">Group</span>
       </a>
     </li>,
     <li className="has-subnav">
